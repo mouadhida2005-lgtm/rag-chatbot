@@ -9,9 +9,9 @@ import traceback
 load_dotenv()
 
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
+MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "mistral-small")
 FAISS_INDEX_PATH = os.getenv("FAISS_INDEX_PATH", "./faiss_index")
-TOP_K = int(os.getenv("TOP_K", 5))
+TOP_K = int(os.getenv("TOP_K", 2))
 
 if not MISTRAL_API_KEY:
     raise ValueError("MISTRAL_API_KEY is required")
@@ -39,11 +39,12 @@ def build_agent():
     # Initialize Mistral chat LLM
     # ---------------------------
     llm = ChatMistralAI(
-        mistral_api_key=MISTRAL_API_KEY,
-        model=MISTRAL_MODEL,
-        temperature=0.2,
-
+    mistral_api_key=MISTRAL_API_KEY,
+    model=MISTRAL_MODEL,
+    temperature=0.2,
+    timeout=20
     )
+
 
     # ---------------------------
     # Prompt template

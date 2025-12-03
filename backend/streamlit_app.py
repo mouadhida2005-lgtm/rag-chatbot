@@ -475,7 +475,7 @@ with st.form(key="chat_form", clear_on_submit=True):
                 response = requests.post(
                     f"{BACKEND_URL}/api/chat",
                     json={"message": user_input, "user_id": "streamlit_user"},
-                    timeout=30
+                    timeout=120
                 )
                 
                 if response.status_code == 200:
