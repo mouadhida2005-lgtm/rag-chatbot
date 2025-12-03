@@ -1,0 +1,83 @@
+######################################
+# PYTHON / BACKEND
+######################################
+
+# Virtual environments
+venv/
+.env/
+.env*/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask/Django instance data
+instance/
+*.db
+*.sqlite3
+
+# Environment/secret files
+*.env
+*.env.*
+!.env.example
+
+# Logs
+*.log
+
+######################################
+# FRONTEND (React, Vue, Next.js)
+######################################
+
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# Vite
+.vite/
+
+# Yarn / npm logs
+yarn-debug.log*
+yarn-error.log*
+npm-debug.log*
+
+# Frontend cache
+*.local
+*.cache
+.cache/
+
+######################################
+# COMMON FILES TO IGNORE
+######################################
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE/Editor folders
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+
+######################################
+# OTHER OPTIONAL IGNORES
+######################################
+
+# Images or uploads (optional – remove if needed)
+uploads/
+media/
+tmp/
+temp/
+
+# Compiled artifacts
+*.egg
+*.egg-info/
