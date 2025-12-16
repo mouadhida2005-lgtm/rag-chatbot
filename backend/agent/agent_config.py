@@ -11,7 +11,7 @@ load_dotenv()
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "mistral-small-latest ")
 FAISS_INDEX_PATH = os.getenv("FAISS_INDEX_PATH", "./faiss_index")
-TOP_K = int(os.getenv("TOP_K", 2))
+TOP_K = int(os.getenv("TOP_K", 4))
 
 if not MISTRAL_API_KEY:
     raise ValueError("MISTRAL_API_KEY is required")
@@ -69,6 +69,7 @@ def build_agent():
     * Course Title (**Must** be enclosed in **bold**).
     * Professor (M. / Mme. [Name])
     * Room/Location (e.g., salle 2).
+    * generate a table format for better readability when he asked about structure or special timetable .
     *You **MUST** end your answer by citing the source document, your citation must be: **(Source: ...)**Example: (Source : Emploi du temps S1, 2025/2026, ENSET Mohammedia)*
     
     If a class slot is empty, state clearly that there is **"no class"** or **"Pas de cours programmé."**
