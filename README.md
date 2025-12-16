@@ -28,7 +28,6 @@ C:\Users\pc\Desktop\rag-chatbot
 Command Prompt (cmd.exe):
 ```
 cd .\backend\
-python -m venv .venv
 
 ```
 
