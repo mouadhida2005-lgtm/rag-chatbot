@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify ,send_from_directory
 from flask_cors import CORS
 from agent.agent_config import build_agent
 from embedding.build_index import build_index
 import os
 from werkzeug.utils import secure_filename
+from files_manager.files_utils import *
 
 app = Flask(__name__)
 CORS(app)
@@ -28,45 +29,6 @@ def health():
     """Health check endpoint"""
     return jsonify({"status": "ok"}), 200
 
-@app.route("/api/upload", methods=["POST"])
-def upload_file():
-    """Upload files endpoint"""
-    try:
-        if 'files' not in request.files:
-            return jsonify({"error": "No files provided"}), 400
-        
-        files = request.files.getlist('files')
-        uploaded_files = []
-        
-        for file in files:
-            if file.filename == '':
-                continue
-            
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
-                uploaded_files.append(filename)
-                print(f"Uploaded: {filename}")
-            else:
-                return jsonify({
-                    "error": f"File type not allowed: {file.filename}. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}"
-                }), 400
-        
-        if not uploaded_files:
-            return jsonify({"error": "No valid files uploaded"}), 400
-        
-        return jsonify({
-            "message": f"Successfully uploaded {len(uploaded_files)} file(s)",
-            "files": uploaded_files,
-            "folder_path": UPLOAD_FOLDER
-        }), 200
-    
-    except Exception as e:
-        print(f"Error in upload_file: {str(e)}")
-        return jsonify({
-            "error": f"Upload failed: {str(e)}"
-        }), 500
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
@@ -124,6 +86,87 @@ def build_index_endpoint():
             return jsonify({
                 "error": error_str
             }), 500
+
+
+# FEEDING FILES MANAGEMENT END POINTS #####################
+# ---------- POST: Upload Files ----------
+@app.route("/api/files", methods=["POST"])
+def upload_files():
+    if "files" not in request.files:
+        return jsonify({"error": "No files provided"}), 400
+
+    files = request.files.getlist("files")
+    response = []
+
+    for file in files:
+        filename = secure_filename(file.filename)
+
+        if not allowed_file(filename):
+            response.append({
+                "name": filename,
+                "status": "rejected",
+                "reason": "unsupported file type"
+            })
+            continue
+
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(file_path)
+
+        response.append({
+            "name": filename,
+            "status": "uploaded"
+        })
+
+    return jsonify(response), 201
+
+# ---------- GET: List Files ----------
+@app.route("/api/files", methods=["GET"])
+def list_files():
+    files = []
+
+    for filename in os.listdir(UPLOAD_FOLDER):
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        if os.path.isfile(file_path) and allowed_file(filename):
+            files.append(file_metadata(file_path))
+
+    return jsonify(files), 200
+
+# ---------- DELETE: Remove File ----------
+@app.route("/api/files/<string:filename>", methods=["DELETE"])
+def delete_file(filename):
+    filename = secure_filename(filename)
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+
+    os.remove(file_path)
+    return jsonify({"message": f"{filename} deleted successfully"}), 200
+
+# DOWLOAD FILE END POINT
+@app.route("/api/files/<string:filename>/download", methods=["GET"])
+def download_file(filename):
+    filename = secure_filename(filename)
+
+    if not allowed_file(filename):
+        return jsonify({"error": "Unsupported file type"}), 400
+
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+
+    return send_from_directory(
+        directory=UPLOAD_FOLDER,
+        path=filename,
+        as_attachment=True
+    )
+
+
+
+
+
+
 
 if __name__ == "__main__":
     # Configure to prevent constant restarts from venv file changes

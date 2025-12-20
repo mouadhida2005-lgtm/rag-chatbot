@@ -1,0 +1,22 @@
+Prenoms personelle / COD , COI
+
+| Type    | Exemple             | Fonction                         | Traduction   |
+| ------- | ------------------- | -------------------------------- | ------------ |
+| Sujet   | **Je parle**.       | Fait l’action                    | I            |
+| COD     | Il **me** voit.     | Reçoit l’action directe          | me           |
+| COI     | Elle **lui** parle. | Reçoit l’action indirecte        | to him / her |
+| Tonique | **Avec toi**        | Après préposition / insistance   | with you     |
+| Y       | J’**y** vais.       | Remplace lieu / à-chose          | there        |
+| En      | J’**en** ai.        | Remplace “de + chose” / quantité | some / of it |
+
+Les pronoms démonstratifs remplacent un nom déjà connu ou sous-entendu.
+
+Ils s’accordent avec le nom qu’ils remplacent.
+
+Ils peuvent être :
+
+simples (celui, celle, ceux, celles),
+
+composés (celui qui, celle que, etc.),
+
+neutres (ceci, cela, ça).
